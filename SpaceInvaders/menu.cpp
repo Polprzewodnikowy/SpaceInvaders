@@ -79,3 +79,35 @@ Menu::MenuValue Menu::showMenu(void)
 		(*w).display();
 	}
 }
+
+void Menu::showAuthors(void)
+{
+	Text authors;
+
+	authors.setFont(font);
+	authors.setCharacterSize(50);
+	authors.setColor(Color(255, 255, 255));
+	authors.setPosition(20, 0);
+	authors.setString("PROGRAMMING:\n\tFADEREWSKI MATEUSZ\n\nGRAPHICS:\n\tHUBERT PERCZYNSKI");
+
+	while((*w).isOpen())
+	{
+		while((*w).pollEvent(e))
+		{
+			switch(e.type)
+			{
+				case Event::Closed:
+					(*w).close();
+					break;
+				case Event::KeyPressed:
+				case Event::MouseButtonPressed:
+					return;
+					break;
+			}
+		}
+
+		(*w).clear();
+		(*w).draw(authors);
+		(*w).display();
+	}
+}

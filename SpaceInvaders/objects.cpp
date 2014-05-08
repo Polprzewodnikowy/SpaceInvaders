@@ -18,6 +18,7 @@ void GameObject::setFrame(int i)
 	if(i < frames)
 	{
 		setTextureRect(IntRect((i % frames) * size.x, (i / frames) * size.y, size.x, size.y));
+		frame = i;
 	}
 }
 
@@ -31,12 +32,12 @@ void Bullet::update(void)
 {
 	switch(type)
 	{
-	case EInvader:
-		move(0, 2);
-		break;
-	case ESpaceship:
-		move(0, -5);
-		break;
+		case EInvader:
+			move(0, 2);
+			break;
+		case ESpaceship:
+			move(0, -5);
+			break;
 	}
 }
 
@@ -44,7 +45,7 @@ Spaceship::Spaceship(Texture &t, int frames, int cols, int rows) :
 	GameObject(t, frames, cols, rows)
 {
 	setOrigin(size.x / 2, size.y / 2);
-	live = 10;
+	live = 2;
 }
 
 void Spaceship::update(void)
@@ -60,8 +61,7 @@ Invader::Invader(Texture &t, int column, int line, int frames, int cols, int row
 	if(line % 2)
 	{
 		dir = true;
-	}
-	else{
+	}else{
 		dir = false;
 	}
 	live = 2;
@@ -70,7 +70,7 @@ Invader::Invader(Texture &t, int column, int line, int frames, int cols, int row
 
 void Invader::update(void)
 {
-	if(animation.getElapsedTime().asMilliseconds() >= 1000)
+	if(animation.getElapsedTime().asSeconds() >= 1)
 	{
 		++frame;
 		if(frame >= frames)
@@ -80,11 +80,10 @@ void Invader::update(void)
 		setFrame(frame);
 		if(dir)
 		{
-			move(5, 1);
+			move(8, 2);
 			dir = false;
-		}
-		else{
-			move(-5, 1);
+		}else{
+			move(-8, 2);
 			dir = true;
 		}
 		animation.restart();

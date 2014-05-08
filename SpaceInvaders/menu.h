@@ -22,4 +22,5 @@ class Menu
 
 		Menu(RenderWindow *w);
 		MenuValue showMenu(void);
+		void showAuthors(void);
 };

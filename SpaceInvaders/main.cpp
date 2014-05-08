@@ -25,6 +25,9 @@ int main(void)
 				game.startGame();
 				break;
 			}
+			case Menu::EAuthors:
+				menu.showAuthors();
+				break;
 			case Menu::EExit:
 				w.close();
 				break;
