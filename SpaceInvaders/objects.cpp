@@ -6,6 +6,7 @@ using namespace sf;
 
 GameObject::GameObject(Texture &t, int frames, int cols, int rows)
 {
+	//t.setSmooth(true);
 	setTexture(t);
 	size.x = t.getSize().x / cols;
 	size.y = t.getSize().y / rows;
@@ -58,34 +59,24 @@ Invader::Invader(Texture &t, int column, int line, int frames, int cols, int row
 {
 	this->line = line;
 	this->column = column;
-	if(line % 2)
-	{
-		dir = true;
-	}else{
-		dir = false;
-	}
-	live = 2;
+	phase = 0;
 	animation.restart();
+	delta.restart();
 }
 
 void Invader::update(void)
 {
-	if(animation.getElapsedTime().asSeconds() >= 1)
-	{
-		++frame;
-		if(frame >= frames)
-		{
-			frame = 0;
-		}
-		setFrame(frame);
-		if(dir)
-		{
-			move(8, 2);
-			dir = false;
-		}else{
-			move(-8, 2);
-			dir = true;
-		}
-		animation.restart();
-	}
+	float dt = delta.restart().asSeconds();
+	
+	if(line % 2)
+		phase += 3 * dt;
+	else
+		phase -= 3 * dt;
+
+	if(sin(phase) >= 0)
+		setFrame(0);
+	else
+		setFrame(1);
+
+	move(sin(phase) * 0.6, abs(sin(phase)) * 0.08);
 }

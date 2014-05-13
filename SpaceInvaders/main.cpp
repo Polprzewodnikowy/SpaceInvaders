@@ -10,7 +10,7 @@ using namespace sf;
 int main(void)
 {
 	srand(time(NULL));
-	RenderWindow w(VideoMode(800, 600, 32), "Space Invaders");
+	RenderWindow w(VideoMode(800, 600, 32), "Space Invaders", Style::Close);
 	w.setVerticalSyncEnabled(true);
 
 	Menu menu(&w);

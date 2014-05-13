@@ -13,13 +13,13 @@ Game::Game(RenderWindow (*w))
 	font.loadFromFile("../data/font.ttf");
 	music.openFromFile("../data/music.ogg");
 
-	for(int i = 0; i < 10; i++)
+	for(int i = 0; i < 8; i++)
 	{
-		for(int n = 0; n < 20; n++)
+		for(int n = 0; n < 18; n++)
 		{
 			Invader inv(invt, n, i, 2, 2, 1);
 			float x, y;
-			x = inv.size.x / 2 + 16 + n * (inv.size.x + 16) + (i % 2) * -8;
+			x = inv.size.x / 2 + 32 + n * (inv.size.x + 16) + ((i % 2) ? -12 : 12);
 			y = inv.size.y / 2 + 40 + i * (inv.size.y + 8);
 			inv.setPosition(x, y);
 			if(i % 2)
@@ -54,9 +54,6 @@ bool Game::pauseGame(void)
 	text.setOrigin(text.getGlobalBounds().width / 2, text.getGlobalBounds().height / 2);
 	text.setPosition((*w).getSize().x / 2, (*w).getSize().y / 2);
 
-	(*w).draw(text);
-	(*w).display();
-
 	while((*w).isOpen())
 	{
 		while((*w).pollEvent(e))
@@ -73,12 +70,20 @@ bool Game::pauseGame(void)
 							return true;
 							break;
 						default:
+							for(vector<Invader>::iterator it = invaders.begin(); it < invaders.end(); ++it)
+								(*it).delta.restart();
 							return false;
 							break;
 					}
 					break;
 			}
 		}
+
+		(*w).clear();
+		(*w).draw(score);
+		(*w).draw(live);
+		(*w).draw(text);
+		(*w).display();
 	}
 	return false;
 }
@@ -92,8 +97,6 @@ void Game::overGame(void)
 	text.setString("GAME OVER\nSCORE: " + to_string(iscore));
 	text.setOrigin(text.getGlobalBounds().width / 2, text.getGlobalBounds().height / 2);
 	text.setPosition((*w).getSize().x / 2, (*w).getSize().y / 2);
-	(*w).draw(text);
-	(*w).display();
 
 	while((*w).isOpen())
 	{
@@ -120,6 +123,9 @@ void Game::overGame(void)
 					break;
 			}
 		}
+		(*w).clear();
+		(*w).draw(text);
+		(*w).display();
 	}
 }
 
@@ -169,7 +175,7 @@ int Game::startGame(void)
 		}
 		if(Keyboard::isKeyPressed(Keyboard::Space))
 		{
-			if(sdelay.getElapsedTime().asMilliseconds() >= 250)
+			if(sdelay.getElapsedTime().asMilliseconds() >= 500)
 			{
 				Bullet b(bltt, Bullet::ESpaceship, 1, 1, 1);
 				b.setPosition(spaceship.getPosition());
@@ -178,7 +184,7 @@ int Game::startGame(void)
 			}
 		}
 
-		if(idelay.getElapsedTime().asSeconds() >= 1)
+		if(idelay.getElapsedTime().asSeconds() >= 0.5)
 		{
 			if(invaders.size())
 			{
@@ -204,8 +210,8 @@ int Game::startGame(void)
 					if((*itb).getGlobalBounds().intersects((*iti).getGlobalBounds()))
 					{
 						iscore += 10;
-						invaders.erase(iti);
 						bullets.erase(itb);
+						invaders.erase(iti);
 					}
 				}
 			}
@@ -249,7 +255,7 @@ int Game::startGame(void)
 		(*w).draw(score);
 		(*w).draw(live);
 		(*w).display();
-		if(spaceship.live <= 0 || !invaders.size())
+		if(spaceship.live < 0 || !invaders.size())
 		{
 			overGame();
 			return iscore;

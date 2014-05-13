@@ -78,6 +78,7 @@ Menu::MenuValue Menu::showMenu(void)
 
 		(*w).display();
 	}
+	return EExit;
 }
 
 void Menu::showAuthors(void)
