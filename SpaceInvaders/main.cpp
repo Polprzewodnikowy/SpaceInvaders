@@ -3,6 +3,7 @@
 #include <SFML\Graphics.hpp>
 #include "game.h"
 #include "menu.h"
+#include "scores.h"
 
 using namespace std;
 using namespace sf;
@@ -14,6 +15,7 @@ int main(void)
 	w.setVerticalSyncEnabled(true);
 
 	Menu menu(&w);
+	Scores scores(&w);
 
 	while(w.isOpen())
 	{
@@ -22,9 +24,12 @@ int main(void)
 			case Menu::EGame:
 			{
 				Game game(&w);
-				game.startGame();
+				scores.addScore(game.startGame());
 				break;
 			}
+			case Menu::EScores:
+				scores.showScores();
+				break;
 			case Menu::EAuthors:
 				menu.showAuthors();
 				break;
