@@ -18,7 +18,8 @@ int main(int argc, char *argv[])
 		<< "Avaiable arguments:" << endl << endl
 		<< "\t-help - View help (this)" << endl
 		<< "\t-vsync - Enable vertical sync, overrides framelimit settings" << endl
-		<< "\t-fr [number] - Set frame limit from 30 to 120 (default 60)" << endl;
+		<< "\t-fr [number] - Set frame limit from 30 to 120 (default 60)" << endl << endl
+		<< "https://github.com/Polprzewodnikowy/SpaceInvaders" << endl;
 
 	if(argc > 1)
 	{
