@@ -89,7 +89,7 @@ void Menu::showAuthors(void)
 	authors.setCharacterSize(50);
 	authors.setColor(Color(255, 255, 255));
 	authors.setPosition(20, 0);
-	authors.setString("PROGRAMMING:\n\tFADEREWSKI MATEUSZ\n\nGRAPHICS:\n\tHUBERT PERCZYNSKI");
+	authors.setString("PROGRAMMING & GRAPHICS:\n\tFADEREWSKI MATEUSZ");
 
 	while((*w).isOpen())
 	{

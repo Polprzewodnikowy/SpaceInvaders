@@ -39,7 +39,7 @@ void Scores::addScore(int score)
 					(*w).close();
 					break;
 				case Event::KeyPressed:
-					if(e.key.code == Keyboard::Return)
+					if(e.key.code == Keyboard::Return && name.size() > 0)
 					{
 						scores += name + ';' + to_string(score) + '\n';
 						fil << name + ';' + to_string(score) + '\n';
