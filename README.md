@@ -1,4 +1,4 @@
-Space Invaders v0.8
+Space Invaders v0.9
 
 Avaiable arguments:
 
