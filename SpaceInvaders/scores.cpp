@@ -9,12 +9,17 @@ Scores::Scores(RenderWindow *w) :
 	string t;
 	font.loadFromFile("../data/font.ttf");
 	fil.open("../scores.txt", ios::in);
-	while(!fil.eof())
+	if(fil.good())
 	{
-		getline(fil, t);
-		scores += t + '\n';
+		while (!fil.eof())
+		{
+			getline(fil, t);
+			scores += t + '\n';
+		}
+		scores.pop_back();
+	}else{
+
 	}
-	scores.pop_back();
 	fil.close();
 	fil.open("../scores.txt", ios::out | ios::app);
 }
@@ -58,7 +63,7 @@ void Scores::addScore(int score)
 								name.pop_back();
 							}
 						}
-						else if(e.text.unicode == '\r' || e.text.unicode == 0x1B)
+						else if(e.text.unicode == '\r' || e.text.unicode == ';' || e.text.unicode == 0x1B)
 						{
 
 						}else{
@@ -107,7 +112,7 @@ void Scores::showScores(void)
 		ts.push_back(t);
 		++entries;
 	}
-
+	
 	//TODO: Sort scores;
 
 	for(int i = 0; i < entries; i++)

@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	bool vsync = false;
 	int framelimit = 60;
 
-	cout << "Space Invaders v0.8" << endl << endl
+	cout << "Space Invaders v0.9" << endl << endl
 		<< "Avaiable arguments:" << endl << endl
 		<< "\t-help - View help (this)" << endl
 		<< "\t-vsync - Enable vertical sync, overrides framelimit settings" << endl

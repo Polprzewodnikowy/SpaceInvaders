@@ -39,7 +39,7 @@ Game::Game(RenderWindow (*w))
 	live.setString("LIVES: 2");
 	live.setPosition((*w).getSize().x - live.getGlobalBounds().width - 24, 0);
 
-	music.setVolume(20);
+	music.setVolume(10);
 	music.setLoop(true);
 	music.play();
 }
@@ -184,7 +184,7 @@ int Game::startGame(void)
 			}
 		}
 
-		if(idelay.getElapsedTime().asSeconds() >= 0.5)
+		if(idelay.getElapsedTime().asSeconds() >= 0.2)
 		{
 			if(invaders.size())
 			{
@@ -196,37 +196,52 @@ int Game::startGame(void)
 			idelay.restart();
 		}
 
-		for(vector<Bullet>::iterator itb = bullets.begin(); itb < bullets.end(); ++itb)
+		vector<Bullet>::iterator lastBullet = bullets.begin();
+		while(lastBullet != bullets.end())
 		{
-			if((*itb).type == Bullet::ESpaceship)
+			if((*lastBullet).type == Bullet::ESpaceship)
 			{
-				if((*itb).getPosition().y < 0)
+				if((*lastBullet).getPosition().y < 0)
 				{
-					bullets.erase(itb);
+					lastBullet = bullets.erase(lastBullet);
 					continue;
 				}
-				for(vector<Invader>::iterator iti = invaders.begin(); iti < invaders.end(); ++iti)
+
+				vector<Invader>::iterator lastInvader = invaders.begin();
+				bool erased = false;
+				while(lastInvader != invaders.end())
 				{
-					if((*itb).getGlobalBounds().intersects((*iti).getGlobalBounds()))
+					if((*lastBullet).getGlobalBounds().intersects((*lastInvader).getGlobalBounds()))
 					{
 						iscore += 10;
-						bullets.erase(itb);
-						invaders.erase(iti);
+						lastBullet = bullets.erase(lastBullet);
+						invaders.erase(lastInvader);
+						erased = true;
+						break;
 					}
+
+					++lastInvader;
 				}
+
+				if (erased)
+					continue;
 			}
-			else if((*itb).type == Bullet::EInvader)
+			else if((*lastBullet).type == Bullet::EInvader)
 			{
-				if((*itb).getPosition().y > (*w).getSize().y)
+				if((*lastBullet).getPosition().y > (*w).getSize().y)
 				{
-					bullets.erase(itb);
+					lastBullet = bullets.erase(lastBullet);
+					continue;
 				}
-				if((*itb).getGlobalBounds().intersects(spaceship.getGlobalBounds()))
+				if((*lastBullet).getGlobalBounds().intersects(spaceship.getGlobalBounds()))
 				{
 					--spaceship.live;
-					bullets.erase(itb);
+					lastBullet = bullets.erase(lastBullet);
+					continue;
 				}
 			}
+
+			++lastBullet;
 		}
 
 		score.setString("SCORE: " + to_string(iscore));
