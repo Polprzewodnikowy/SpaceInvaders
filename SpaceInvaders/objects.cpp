@@ -6,11 +6,11 @@ using namespace sf;
 
 GameObject::GameObject(Texture &t, int frames, int cols, int rows)
 {
-	//t.setSmooth(true);
 	setTexture(t);
 	size.x = t.getSize().x / cols;
 	size.y = t.getSize().y / rows;
 	this->frames = frames;
+	dt = 0;
 	setFrame(0);
 }
 
@@ -23,6 +23,11 @@ void GameObject::setFrame(int i)
 	}
 }
 
+void GameObject::update(void)
+{
+
+}
+
 Bullet::Bullet(Texture &t, BulletType type, int frames, int cols, int rows) :
 	GameObject(t, frames, cols, rows)
 {
@@ -31,13 +36,15 @@ Bullet::Bullet(Texture &t, BulletType type, int frames, int cols, int rows) :
 
 void Bullet::update(void)
 {
+	dt = delta.restart().asSeconds();
+	
 	switch(type)
 	{
 		case EInvader:
-			move(0, 2);
+			move(0, 150 * dt);
 			break;
 		case ESpaceship:
-			move(0, -5);
+			move(0, -300 * dt);
 			break;
 	}
 }
@@ -51,7 +58,7 @@ Spaceship::Spaceship(Texture &t, int frames, int cols, int rows) :
 
 void Spaceship::update(void)
 {
-
+	dt = delta.restart().asSeconds();
 }
 
 Invader::Invader(Texture &t, int column, int line, int frames, int cols, int rows) :
@@ -66,17 +73,23 @@ Invader::Invader(Texture &t, int column, int line, int frames, int cols, int row
 
 void Invader::update(void)
 {
-	float dt = delta.restart().asSeconds();
-	
-	if(line % 2)
-		phase += 3 * dt;
-	else
-		phase -= 3 * dt;
+	dt = delta.restart().asSeconds();
 
-	if(sin(phase) >= 0)
+	if(line % 2)
+		phase -= dt;
+	else
+		phase += dt;
+
+	setPosition(original_position + Vector2f(sin(phase * 3) * 12, abs(phase * 3)));
+
+	if(sin((phase * 3) + ((line % 2) ? (3.14159265358979323846 / 2) : -(3.14159265358979323846 / 2))) >= 0)
 		setFrame(0);
 	else
 		setFrame(1);
+}
 
-	move(sin(phase) * 0.6, abs(sin(phase)) * 0.08);
+void Invader::setOriginalPosition(Vector2f pos)
+{
+	original_position = pos;
+	setPosition(pos);
 }

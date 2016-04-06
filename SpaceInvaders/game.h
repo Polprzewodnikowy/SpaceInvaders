@@ -21,6 +21,7 @@ class Game
 		int iscore = 0;
 		vector<Invader> invaders;
 		vector<Bullet> bullets;
+		Spaceship *spaceship;
 
 	public:
 		Game(RenderWindow *w);

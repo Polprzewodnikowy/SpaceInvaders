@@ -19,14 +19,16 @@ Game::Game(RenderWindow (*w))
 		{
 			Invader inv(invt, n, i, 2, 2, 1);
 			float x, y;
-			x = inv.size.x / 2 + 32 + n * (inv.size.x + 16) + ((i % 2) ? -12 : 12);
+			x = inv.size.x / 2 + 32 + n * (inv.size.x + 16);
 			y = inv.size.y / 2 + 40 + i * (inv.size.y + 8);
-			inv.setPosition(x, y);
+			inv.setOriginalPosition(Vector2f(x, y));
 			if(i % 2)
 				inv.setFrame(1);
 			invaders.push_back(inv);
 		}
 	}
+
+	spaceship = new Spaceship(shpt, 1, 1, 1);
 
 	score.setFont(font);
 	score.setCharacterSize(30);
@@ -72,6 +74,9 @@ bool Game::pauseGame(void)
 						default:
 							for(vector<Invader>::iterator it = invaders.begin(); it < invaders.end(); ++it)
 								(*it).delta.restart();
+							for (vector<Bullet>::iterator it = bullets.begin(); it < bullets.end(); ++it)
+								(*it).delta.restart();
+							spaceship->delta.restart();
 							return false;
 							break;
 					}
@@ -131,10 +136,10 @@ void Game::overGame(void)
 
 int Game::startGame(void)
 {
-	Spaceship spaceship(shpt, 1, 1, 1);
+	//Spaceship spaceship(shpt, 1, 1, 1);
 
-	spaceship.setPosition((*w).getSize().x / 2, (*w).getSize().y - spaceship.size.y / 2 - 16);
-	spaceship.setTexture(shpt);
+	spaceship->setPosition((*w).getSize().x / 2, (*w).getSize().y - spaceship->size.y / 2 - 16);
+	spaceship->setTexture(shpt);
 
 	while((*w).isOpen())
 	{
@@ -161,24 +166,24 @@ int Game::startGame(void)
 			}
 		}
 
-		spaceship.update();
+		spaceship->update();
 
 		if(Keyboard::isKeyPressed(Keyboard::Left))
 		{
-			if(spaceship.getPosition().x > 20)
-				spaceship.move(-3, 0);
+			if (spaceship->getPosition().x > 20)
+				spaceship->move(-250 * spaceship->dt, 0);
 		}
 		else if(Keyboard::isKeyPressed(Keyboard::Right))
 		{
-			if(spaceship.getPosition().x < (*w).getSize().x - 20)
-				spaceship.move(3, 0);
+			if (spaceship->getPosition().x < (*w).getSize().x - 20)
+				spaceship->move(250 * spaceship->dt, 0);
 		}
 		if(Keyboard::isKeyPressed(Keyboard::Space))
 		{
 			if(sdelay.getElapsedTime().asMilliseconds() >= 500)
 			{
 				Bullet b(bltt, Bullet::ESpaceship, 1, 1, 1);
-				b.setPosition(spaceship.getPosition());
+				b.setPosition(spaceship->getPosition());
 				bullets.push_back(b);
 				sdelay.restart();
 			}
@@ -233,9 +238,9 @@ int Game::startGame(void)
 					lastBullet = bullets.erase(lastBullet);
 					continue;
 				}
-				if((*lastBullet).getGlobalBounds().intersects(spaceship.getGlobalBounds()))
+				if((*lastBullet).getGlobalBounds().intersects(spaceship->getGlobalBounds()))
 				{
-					--spaceship.live;
+					--spaceship->live;
 					lastBullet = bullets.erase(lastBullet);
 					continue;
 				}
@@ -245,7 +250,7 @@ int Game::startGame(void)
 		}
 
 		score.setString("SCORE: " + to_string(iscore));
-		live.setString("LIVES: " + to_string(spaceship.live));
+		live.setString("LIVES: " + to_string(spaceship->live));
 
 		(*w).clear();
 
@@ -266,11 +271,11 @@ int Game::startGame(void)
 			(*w).draw(*it);
 		}
 
-		(*w).draw(spaceship);
+		(*w).draw(*spaceship);
 		(*w).draw(score);
 		(*w).draw(live);
 		(*w).display();
-		if(spaceship.live < 0 || !invaders.size())
+		if(spaceship->live < 0 || !invaders.size())
 		{
 			overGame();
 			return iscore;

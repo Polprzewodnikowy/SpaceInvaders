@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 		<< "Avaiable arguments:" << endl << endl
 		<< "\t-help - View help (this)" << endl
 		<< "\t-vsync - Enable vertical sync, overrides framelimit settings" << endl
-		<< "\t-fr [number] - Set frame limit from 30 to 120 (default 60)" << endl << endl
+		<< "\t-fr [number] - Set frame limit from 1 to 240 (default 60)" << endl << endl
 		<< "https://github.com/Polprzewodnikowy/SpaceInvaders" << endl;
 
 	if(argc > 1)
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 				if(argv[i + 1] && isdigit(argv[i + 1][0]))
 				{
 					framelimit = strtol(argv[i + 1], NULL, 10);
-					if(framelimit < 30 || framelimit > 120)
+					if(framelimit < 1 || framelimit > 240)
 						framelimit = 60;
 					++i;
 				}
