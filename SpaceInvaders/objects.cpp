@@ -41,10 +41,10 @@ void Bullet::update(void)
 	switch(type)
 	{
 		case EInvader:
-			move(0, 150 * dt);
+			move(0, 180 * dt);
 			break;
 		case ESpaceship:
-			move(0, -300 * dt);
+			move(0, -500 * dt);
 			break;
 	}
 }

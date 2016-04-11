@@ -189,7 +189,7 @@ int Game::startGame(void)
 			}
 		}
 
-		if(idelay.getElapsedTime().asSeconds() >= 0.2)
+		if(idelay.getElapsedTime().asMilliseconds() >= (700.0 / invaders.size()) + 300)
 		{
 			if(invaders.size())
 			{
